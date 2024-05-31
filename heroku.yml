@@ -1,0 +1,43 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Heroku CLI
+        uses: actions/heroku@v7
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Login to Heroku
+        run: heroku login -i
+
+      - name: Create Heroku app
+        run: heroku create your-app-name
+
+      - name: Set Heroku environment variables
+        run: |
+          heroku config:set SECRET_KEY=${{ secrets.SECRET_KEY }} -a your-app-name
+          # Add other environment variables as needed
+
+      - name: Deploy to Heroku
+        run: git push heroku main:main
