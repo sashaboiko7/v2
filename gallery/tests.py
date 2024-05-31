@@ -21,3 +21,12 @@ class GalleryViewTests(TestCase):
             age_limit=18
         )
         self.image2.categories.add(self.category2)
+
+    def test_gallery_view(self):
+        response = self.client.get(reverse('main'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'gallery/gallery.html')
+        self.assertContains(response, 'Category 1')
+        self.assertContains(response, 'Category 2')
+        self.assertContains(response, 'Image 1')
+        self.assertContains(response, 'Image 2')
