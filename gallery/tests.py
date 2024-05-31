@@ -30,3 +30,14 @@ class GalleryViewTests(TestCase):
         self.assertContains(response, 'Category 2')
         self.assertContains(response, 'Image 1')
         self.assertContains(response, 'Image 2')
+
+    def test_image_detail_view(self):
+        response = self.client.get(reverse('image_detail', args=[self.image1.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'gallery/image_detail.html')
+        self.assertContains(response, 'Image 1')
+
+        response = self.client.get(reverse('image_detail', args=[self.image2.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'gallery/image_detail.html')
+        self.assertContains(response, 'Image 2')
